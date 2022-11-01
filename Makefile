@@ -6,8 +6,15 @@ OBJ_DIR:=obj
 GEN_DIR:=gen
 EXP_DIR:=export
 EXE_NAME:=unit_test
-LINUX_INSTALL_DIR:=/usr/include/struct
-TERMUX_INSTALL_DIR:=$${HOME}/../usr/include/struct
+EXP_BIN_DIR:=$(EXP_DIR)/bin
+EXP_LIB_DIR:=$(EXP_DIR)/lib
+EXP_INC_DIR:=$(EXP_DIR)/include
+LINUX_INC_INST_DIR:=/usr/local/include/struct
+LINUX_LIB_INST_DIR:=/usr/local/lib
+LINUX_BIN_INST_DIR:=/usr/local/bin
+TERMUX_INC_INST_DIR:=$${HOME}/../usr/include/struct
+TERMUX_LIB_INST_DIR:=$${HOME}/../usr/lib
+TERMUX_BIN_INST_DIR:=$${HOME}/../usr/bin
 
 srcs:=$(wildcard $(SRC_DIR)/*.c)
 incs:=$(wildcard $(INC_DIR)/*.h)
@@ -25,6 +32,7 @@ default: run
 	uninstall_termux \
 	install_linux \
 	uninstall_linux \
+	.pack_include \
 	.install \
 	.uninstall 
 
@@ -32,31 +40,49 @@ run: $(exe)
 	./$(exe)
 
 clean:
-	rm -rf $(OBJ_DIR)/* $(GEN_DIR)/* $(EXP_DIR)/*
+	rm -rf $(OBJ_DIR)/* $(GEN_DIR)/* $(EXP_INC_DIR)/* $(EXP_LIB_DIR)/* $(EXP_BIN_DIR)/*
 
-pack: $(incs)
-	for file in $^; do cp $$file ${EXP_DIR}; done 
+pack: .pack_include
 
-install_termux: install_dir:=$(TERMUX_INSTALL_DIR)
+install_termux: inc_inst_dir:=$(TERMUX_INC_INST_DIR)
+install_termux: lib_inst_dir:=$(TERMUX_LIB_INST_DIR)
+install_termux: bin_inst_dir:=$(TERMUX_BIN_INST_DIR)
 install_termux: .install
 
-install_linux: install_dir:=$(LINUX_INSTALL_DIR)
+install_linux: inc_inst_dir:=$(LINUX_INC_INST_DIR)
+install_linux: lib_inst_dir:=$(LINUX_LIB_INST_DIR) 
+install_linux: bin_inst_dir:=$(LINUX_BIN_INST_DIR)
 install_linux: .install
 
-uninstall_termux: install_dir:=$(TERMUX_INSTALL_DIR)
+uninstall_termux: inc_inst_dir:=$(TERMUX_INC_INST_DIR)
+uninstall_termux: lib_inst_dir:=$(TERMUX_LIB_INST_DIR)
+uninstall_termux: bin_inst_dir:=$(TERMUX_BIN_INST_DIR)
 uninstall_termux: .uninstall 
 
-uninstall_linux: install_dir:=$(LINUX_INSTALL_DIR)
+uninstall_linux: inc_inst_dir:=$(LINUX_INC_INST_DIR)
+uninstall_linux: lib_inst_dir:=$(LINUX_LIB_INST_DIR) 
+uninstall_linux: bin_inst_dir:=$(LINUX_BIN_INST_DIR)
 uninstall_linux: .uninstall
 
+.pack_include: $(incs)
+	cp $^ $(EXP_INC_DIR)
+
 .install: pack
-	$(if $(value install_dir),, $(error "Install directory is not specified."))
-	if [ ! -d $(install_dir) ]; then mkdir $(install_dir); fi
-	cp $(EXP_DIR)/* $(install_dir)
+	$(if $(value inc_inst_dir),, $(error "Include install directory is not specified."))
+	$(if $(value lib_inst_dir),, $(error "Library install directory is not specified."))
+	$(if $(value bin_inst_dir),, $(error "Binary install directory is not specified."))
+	if [ ! -d $(inc_inst_dir) ]; then mkdir $(inc_inst_dir); fi
+	cp $(EXP_INC_DIR)/* $(inc_inst_dir) 2>/dev/null || :
+	cp $(EXP_LIB_DIR)/* $(lib_inst_dir) 2>/dev/null || :
+	cp $(EXP_BIN_DIR)/* $(bin_inst_dir) 2>/dev/null || :
 
 .uninstall: 
-	$(if $(value install_dir),, $(error "Install directory is not specified."))
-	if [ -d $(install_dir) ]; then rm -rf $(install_dir); fi
+	$(if $(value inc_inst_dir),, $(error "Include install directory is not specified."))
+	$(if $(value lib_inst_dir),, $(error "Library install directory is not specified."))
+	$(if $(value bin_inst_dir),, $(error "Binary install directory is not specified."))
+	rm -ir $(inc_inst_dir) || :
+	rm -ir $($(wildcard $(EXP_LIB_DIR)/*):$(EXP_LIB_DIR)/%=$(lib_inst_dir)/%) || :
+	rm -ir $($(wildcard $(EXP_BIN_DIR)/*):$(EXP_LIB_DIR)/%=$(bin_inst_dir)/%) || :
 
 $(exe): $(objs)
 	$(CC) $(CFLAGS) $^ -o $@

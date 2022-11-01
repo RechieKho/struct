@@ -1,0 +1,11 @@
+export/*
+!export/bin
+!export/lib
+!export/include
+export/bin/*
+export/lib/*
+export/include/*
+gen/*
+obj/*
+
+!**/.gitkeep
