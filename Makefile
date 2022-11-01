@@ -3,7 +3,7 @@ CFLAGS:=-Wall -Wextra
 INC_DIR:=include
 SRC_DIR:=src
 OBJ_DIR:=obj
-GEN_DIR:=gen
+BIN_DIR:=bin
 EXP_DIR:=export
 EXE_NAME:=unit_test
 EXP_BIN_DIR:=$(EXP_DIR)/bin
@@ -19,7 +19,7 @@ TERMUX_BIN_INST_DIR:=$${HOME}/../usr/bin
 srcs:=$(wildcard $(SRC_DIR)/*.c)
 incs:=$(wildcard $(INC_DIR)/*.h)
 objs:=$(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(srcs))
-exe:=$(GEN_DIR)/$(EXE_NAME)
+exe:=$(BIN_DIR)/$(EXE_NAME)
 
 default: run 
 
@@ -40,7 +40,7 @@ run: $(exe)
 	./$(exe)
 
 clean:
-	rm -rf $(OBJ_DIR)/* $(GEN_DIR)/* $(EXP_INC_DIR)/* $(EXP_LIB_DIR)/* $(EXP_BIN_DIR)/*
+	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/* $(EXP_INC_DIR)/* $(EXP_LIB_DIR)/* $(EXP_BIN_DIR)/*
 
 pack: .pack_include
 
