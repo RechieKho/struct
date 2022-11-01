@@ -1,6 +1,12 @@
 #ifndef _TEST_H_
 #define _TEST_H_
 
+/* # test
+ * This file contains a small set of function for unit tests. To start a test,
+ * `test_start` must be called first before any other function. Then, use `test`
+ * function to test. After running the test, call `test_end` to finalize a test
+ * and calculate the result. */
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
