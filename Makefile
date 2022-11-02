@@ -1,5 +1,5 @@
 CC:=clang
-CFLAGS:=-Wall -Wextra
+CFLAGS:=-Wall 
 INC_DIR:=include
 SRC_DIR:=src
 OBJ_DIR:=obj
