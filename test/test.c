@@ -1,6 +1,6 @@
 #include <stdio.h>
 
 int main() {
-    printf("Hello world\n"); 
+    printf("Test is yet to be written.\n"); 
     return 0;
 }
