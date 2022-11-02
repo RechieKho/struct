@@ -112,7 +112,7 @@ typedef uint32_t list_uint;
     mp_keyword list_uint mp_id ## _list_length(const struct mp_id ##_list* p_list); \
     mp_keyword bool pid ## _list_find(const struct mp_id ## _list* p_list, const mp_type p_item, list_uint* r_index);
 
-#define LIS_DEFINE_GETTER(mp_id, mp_type, mp_keyword) \
+#define LIST_DEFINE_GETTER(mp_id, mp_type, mp_keyword) \
     mp_keyword bool mp_id ## _list_get(const struct mp_id ## _list* p_list, list_uint p_index, mp_type* r_item) { \
         if(p_index >= p_list->length) return false;  \
         if(r_item) *r_item = p_list->items[p_index];  \
@@ -298,7 +298,7 @@ typedef uint32_t list_uint;
         if(p_list->capacity) free(p_list->items); \
     } \
     static bool mp_id ## _list_make_space(struct mp_id ## _list* p_list, list_uint p_new_length) { \
-        list_uint new_capacity = p_list->new_capacity? p_list->new_capacity : LIST_INIT_ITEM_COUNT; \
+        list_uint new_capacity = p_list->capacity? p_list->capacity: LIST_INIT_ITEM_COUNT; \
         while(new_capacity < p_new_length) new_capacity *= 2;  \
         mp_type* new_items = NULL; \
         if(!(new_items = realloc(p_list->items, new_capacity * sizeof(mp_type)))) return false;  \
@@ -319,9 +319,10 @@ typedef uint32_t list_uint;
     } \
     mp_keyword bool mp_id ## _list_insert(struct mp_id ## _list* p_list, const mp_type p_item, list_uint p_index) { \
         if(p_index > p_list->length) return false;  \
-        if(!mp_id ## _list_make_space(r_list, p_length)) return false; \
+        if(!mp_id ## _list_make_space(p_list, p_list->length + 1)) return false; \
         for(list_uint i = p_list->length; i > p_index; i--) \
             memcpy(p_list->items + i, p_list->items + i - 1, sizeof(mp_type));   \
+        p_list->items[p_index] = p_item; \
         p_list->length++; \
         return true;  \
     } \
