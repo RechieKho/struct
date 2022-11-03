@@ -139,10 +139,10 @@ typedef uint32_t list_uint;
     } \
     mp_keyword bool mp_id ## _list_find(const struct mp_id ## _list* p_list, const mp_type p_item, list_uint p_nth, list_uint* r_index) { \
         for(list_uint i = 0; i < p_list->length; i++) \
-        if(p_list->items[i] == p_item && !p_nth) { \
-            *r_index = i;  \
-            return true;  \
-        } else p_nth--; \
+            if(p_list->items[i] == p_item && !p_nth--) { \
+                *r_index = i;  \
+                return true;  \
+            } \
         return false; \
     } \
     mp_keyword bool mp_id ## _list_equal(const struct mp_id ## _list* p_list_a, const struct mp_id ## _list* p_list_b) { \
@@ -350,8 +350,8 @@ typedef uint32_t list_uint;
     } \
     mp_keyword bool mp_id ## _list_erase(struct mp_id ## _list* p_list, list_uint p_index) { \
         if(p_index >= p_list->length) return false;  \
-        for(list_uint i = p_index; i < p_list->length - 1; i--) \
-            memcpy(p_list->items + i, p_list->items + i - 1, sizeof(mp_type));   \
+        for(list_uint i = p_index; i < p_list->length - 1; i++) \
+            memcpy(p_list->items + i, p_list->items + i + 1, sizeof(mp_type));   \
         p_list->length--;  \
         return true;  \
     } \
@@ -363,7 +363,7 @@ typedef uint32_t list_uint;
     } \
     mp_keyword bool mp_id ## _list_pop_back(struct mp_id ## _list* p_list, mp_type* r_popped) { \
         const mp_type popped = p_list->items[p_list->length];  \
-        if(!mp_id ## _list_erase(p_list, p_list->length)) return false; \
+        if(!mp_id ## _list_erase(p_list, p_list->length - 1)) return false; \
         *r_popped = popped;  \
         return true; \
     } \
