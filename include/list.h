@@ -24,7 +24,7 @@
  * ## Memory
  * The array that stores the items will always be on the heap, while the
  * list structure itself (that stores pointer to the array and etc.) can be on
- * the stack on heap. 
+ * the stack or heap. 
  *
  * For list on heap, use `ID_list_new` to create a list on heap. `ID_list_free`
  * must be used to free the list and its array. 
@@ -299,7 +299,7 @@ typedef uint32_t list_uint;
     mp_keyword struct mp_id ## _list* mp_id ## _list_new(); \
     mp_keyword void mp_id ## _list_free(struct mp_id ## _list* p_list); \
     mp_keyword void mp_id ## _list_free_items(struct mp_id ## _list* p_list); \
-    mp_keyword void mp_id ## _list_from_array(const mp_type* p_array, list_uint p_length, struct mp_id ## _list* r_list); \
+    mp_keyword bool mp_id ## _list_from_array(const mp_type* p_array, list_uint p_length, struct mp_id ## _list* r_list); \
     mp_keyword bool mp_id ## _list_set(struct mp_id ## _list* p_list, const mp_type p_item, list_uint p_index); \
     mp_keyword bool mp_id ## _list_insert(struct mp_id ## _list* p_list, const mp_type p_item, list_uint p_index); \
     mp_keyword bool mp_id ## _list_erase(struct mp_id ## _list* p_list, list_uint p_index); \
