@@ -69,7 +69,7 @@ static void test_end() {
             "-----\n"
             "Total test: %u\n"
             "Total passed: %u\n"
-            "Percentage passed: %3u%%\n",
+            "Percentage passed: %3.2u%%\n",
             test_data.total, test_data.passed, (test_data.passed * 100) / test_data.total
           );
     test_data.is_testing = false; 
