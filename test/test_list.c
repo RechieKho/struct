@@ -1,6 +1,7 @@
 #include <list.h>
 #include <test.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "test_list.h"
 
 #define ARRAY_LEN(p_array) (sizeof(p_array) / sizeof(p_array[0]))
@@ -8,6 +9,13 @@
 LIST_DEFINE_STRUCT(int, int, );
 LIST_DEFINE_GETTER(int, int, static); 
 LIST_DEFINE_SETTER(int, int, static); 
+
+static void print_list(struct int_list* p_list) {
+    fputs("[", stdout);
+    for(list_uint i = 0; i < p_list->length; i++)
+        printf("%d, ", p_list->items[i]);
+    fputs("]", stdout);
+}
 
 static void test_list_from_array();
 static void test_list_equal();
