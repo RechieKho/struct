@@ -109,11 +109,24 @@ typedef uint32_t list_uint;
  *  | When the item is not in the list, it fails.
  *  % - `true` on success. `false` on fail.
  * <<
+ * >> ID_list_equal
+ *  Check whether the lists given are equal.
+ *
+ * @param 
+ *  `p_list_a` - First list. 
+ *  `p_list_b` - Second list. 
+ *
+ * @return 
+ *  % - `true` if equal, else false. 
+ *
+ * @noerror
  * */
 #define LIST_DECLARE_GETTER(mp_id, mp_type, mp_keyword) \
     mp_keyword bool mp_id ## _list_get(const struct mp_id ## _list* p_list, list_uint p_index, mp_type* r_item); \
     mp_keyword list_uint mp_id ## _list_length(const struct mp_id ##_list* p_list); \
-    mp_keyword bool pid ## _list_find(const struct mp_id ## _list* p_list, const mp_type p_item, list_uint p_nth, list_uint* r_index);
+    mp_keyword bool mp_id ## _list_find(const struct mp_id ## _list* p_list, const mp_type p_item, list_uint p_nth, list_uint* r_index); \
+    mp_keyword bool mp_id ## _list_equal(const struct mp_id ## _list* p_list_a, const struct mp_id ## _list* p_list_b);
+    
 
 #define LIST_DEFINE_GETTER(mp_id, mp_type, mp_keyword) \
     mp_keyword bool mp_id ## _list_get(const struct mp_id ## _list* p_list, list_uint p_index, mp_type* r_item) { \
@@ -124,13 +137,19 @@ typedef uint32_t list_uint;
     mp_keyword list_uint mp_id ## _list_length(const struct mp_id ##_list* p_list) { \
         return p_list->length; \
     } \
-    mp_keyword bool pid ## _list_find(const struct mp_id ## _list* p_list, const mp_type p_item, list_uint p_nth, list_uint* r_index) { \
+    mp_keyword bool mp_id ## _list_find(const struct mp_id ## _list* p_list, const mp_type p_item, list_uint p_nth, list_uint* r_index) { \
         for(list_uint i = 0; i < p_list->length; i++) \
         if(p_list->items[i] == p_item && !p_nth) { \
             *r_index = i;  \
             return true;  \
         } else p_nth--; \
         return false; \
+    } \
+    mp_keyword bool mp_id ## _list_equal(const struct mp_id ## _list* p_list_a, const struct mp_id ## _list* p_list_b) { \
+        if(p_list_a->length != p_list_b->length) return false; \
+        for(list_uint i = 0; i < p_list_a->length; i++) \
+            if(p_list_a->items[i] != p_list_b->items[i]) return false;  \
+        return true; \
     }
 
 /* # Setter functions
