@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include "test_list.h"
 
 int main() {
-    printf("Test is yet to be written.\n"); 
+    test_list();
     return 0;
 }
