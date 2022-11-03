@@ -35,7 +35,9 @@
  *
  * To avoid memory leaks, DON'T:
  * - Modify the member of the struct, unless you know want you are doing. 
- * - Free with `free` from stdlib instead of `ID_list_free`.*/
+ * - Free with `free` from stdlib instead of `ID_list_free`.
+ * - Give NULL pointer as argument, all functions do not check the validity of
+ *   pointer.*/
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -93,11 +95,12 @@ typedef uint32_t list_uint;
  * @noerror
  * <<
  * >> ID_list_find
- *  Find the index of item given. 
+ *  Find the index of nth item given. 
  *
  * @param 
  *  `p_list` - The list to be operated on.
- *  `p_item` - item to find. 
+ *  `p_item` - Item to find. 
+ *  `p_nth` - Nth item.
  *
  * @return 
  *  `r_index` - index of the item in the list.
@@ -110,7 +113,7 @@ typedef uint32_t list_uint;
 #define LIST_DECLARE_GETTER(mp_id, mp_type, mp_keyword) \
     mp_keyword bool mp_id ## _list_get(const struct mp_id ## _list* p_list, list_uint p_index, mp_type* r_item); \
     mp_keyword list_uint mp_id ## _list_length(const struct mp_id ##_list* p_list); \
-    mp_keyword bool pid ## _list_find(const struct mp_id ## _list* p_list, const mp_type p_item, list_uint* r_index);
+    mp_keyword bool pid ## _list_find(const struct mp_id ## _list* p_list, const mp_type p_item, list_uint p_nth, list_uint* r_index);
 
 #define LIST_DEFINE_GETTER(mp_id, mp_type, mp_keyword) \
     mp_keyword bool mp_id ## _list_get(const struct mp_id ## _list* p_list, list_uint p_index, mp_type* r_item) { \
@@ -121,12 +124,12 @@ typedef uint32_t list_uint;
     mp_keyword list_uint mp_id ## _list_length(const struct mp_id ##_list* p_list) { \
         return p_list->length; \
     } \
-    mp_keyword bool pid ## _list_find(const struct mp_id ## _list* p_list, const mp_type p_item, list_uint* r_index) { \
+    mp_keyword bool pid ## _list_find(const struct mp_id ## _list* p_list, const mp_type p_item, list_uint p_nth, list_uint* r_index) { \
         for(list_uint i = 0; i < p_list->length; i++) \
-        if(p_list->items[i] == p_item) { \
-            if(r_index) *r_index = i;  \
+        if(p_list->items[i] == p_item && !p_nth) { \
+            *r_index = i;  \
             return true;  \
-        } \
+        } else p_nth--; \
         return false; \
     }
 
