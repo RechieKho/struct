@@ -11,7 +11,7 @@ TST_EXE_NAME:=unit_test
 EXP_BIN_DIR:=$(EXP_DIR)/bin
 EXP_LIB_DIR:=$(EXP_DIR)/lib
 EXP_INC_DIR:=$(EXP_DIR)/include
-INC_INST_DIRNAME:=basec # MUST NOT BE EMPTY!!!
+INC_INST_DIRNAME:=basec
 
 LINUX_INC_INST_DIR:=/usr/local/include/$(INC_INST_DIRNAME)
 LINUX_LIB_INST_DIR:=/usr/local/lib
@@ -45,6 +45,7 @@ default: test
 	.install \
 	.uninstall 
 
+test: CFLAGS+=-O0 -g
 test: $(tst_exe)
 	./$(tst_exe)
 
