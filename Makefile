@@ -1,5 +1,5 @@
 CC:=clang
-CFLAGS:=-Wall 
+CFLAGS:=-Wall -Wextra
 INC_DIR:=include
 SRC_DIR:=src
 OBJ_DIR:=obj
@@ -11,7 +11,7 @@ TST_EXE_NAME:=unit_test
 EXP_BIN_DIR:=$(EXP_DIR)/bin
 EXP_LIB_DIR:=$(EXP_DIR)/lib
 EXP_INC_DIR:=$(EXP_DIR)/include
-INC_INST_DIRNAME:=struct # MUST NOT BE EMPTY!!!
+INC_INST_DIRNAME:=basec # MUST NOT BE EMPTY!!!
 
 LINUX_INC_INST_DIR:=/usr/local/include/$(INC_INST_DIRNAME)
 LINUX_LIB_INST_DIR:=/usr/local/lib
@@ -87,9 +87,9 @@ uninstall_linux: .uninstall
 	$(if $(value lib_inst_dir),, $(error "Library install directory is not specified."))
 	$(if $(value bin_inst_dir),, $(error "Binary install directory is not specified."))
 	if [ ! -d $(inc_inst_dir) ]; then mkdir $(inc_inst_dir); fi
-	cp $(EXP_INC_DIR)/* $(inc_inst_dir) 2>/dev/null || :
-	cp $(EXP_LIB_DIR)/* $(lib_inst_dir) 2>/dev/null || :
-	cp $(EXP_BIN_DIR)/* $(bin_inst_dir) 2>/dev/null || :
+	cp -i --backup=t $(EXP_INC_DIR)/* $(inc_inst_dir) || :
+	cp -i --backup=t $(EXP_LIB_DIR)/* $(lib_inst_dir) || :
+	cp -i --backup=t $(EXP_BIN_DIR)/* $(bin_inst_dir) || :
 
 .uninstall: 
 	$(if $(value inc_inst_dir),, $(error "Include install directory is not specified."))
